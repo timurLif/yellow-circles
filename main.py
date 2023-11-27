@@ -1,19 +1,25 @@
 import sys
 import random
-
-from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QWidget
 from PyQt5.QtGui import QPainter, QColor
-from PyQt5.QtCore import Qt
+
+
+class CircleDrawerUI(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.button = QPushButton('Draw Circle', self)
+        self.button.setGeometry(10, 0, 520, 30)
 
 
 class CircleDrawer(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('UI.ui', self)
-        self.setWindowTitle('Random Circles')
-        
-        self.button.clicked.connect(self.drawCircle)
+
+        self.ui = CircleDrawerUI()
+        self.setCentralWidget(self.ui)
+
+        self.ui.button.clicked.connect(self.drawCircle)
 
         self.circles = []
 
@@ -21,7 +27,7 @@ class CircleDrawer(QMainWindow):
         diameter = random.randint(10, 100)
         x = random.randint(0, self.width() - diameter)
         y = random.randint(0, self.height() - diameter)
-        color = QColor(Qt.yellow)
+        color = QColor(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
         self.circles.append((x, y, diameter, color))
         self.update()
@@ -33,10 +39,12 @@ class CircleDrawer(QMainWindow):
             x, y, diameter, color = circle
             painter.setBrush(color)
             painter.drawEllipse(x, y, diameter, diameter)
-    
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = CircleDrawer()
+    ex.setWindowTitle('Random Circles')
+    ex.setGeometry(0, 0, 540, 600)
     ex.show()
     sys.exit(app.exec_())
